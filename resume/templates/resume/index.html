@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="text-align: center; padding: 4rem 0;">
+    <h1 style="font-size: 3rem; margin-bottom: 1rem; color: #0f172a;">Build Your Professional Resume</h1>
+    <p style="font-size: 1.25rem; color: #64748b; margin-bottom: 2rem;">Create a stunning resume in minutes with our
+        easy-to-use builder.</p>
+    <a href="{% url 'create_resume' %}" class="btn" style="padding: 0.75rem 1.5rem; font-size: 1.1rem;">Get Started
+        Now</a>
+</div>
+{% endblock %}

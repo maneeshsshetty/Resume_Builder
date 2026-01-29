@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            color: #333;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Using a top-level table for layout because floats can be tricky in xhtml2pdf */
+        .layout-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .sidebar {
+            width: 30%;
+            background-color: #1e293b;
+            color: white;
+            padding: 30px 20px;
+            vertical-align: top;
+        }
+
+        .main {
+            width: 70%;
+            padding: 30px;
+            vertical-align: top;
+            background-color: #ffffff;
+        }
+
+        .name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            font-weight: bold;
+            color: #94a3b8;
+            border-bottom: 1px solid #475569;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-text {
+            font-size: 11px;
+            margin-bottom: 8px;
+            color: #e2e8f0;
+            word-wrap: break-word;
+            /* Standard */
+            word-break: break-all;
+            /* For long URLs */
+            overflow-wrap: break-word;
+            /* Modern standard */
+        }
+
+        .main-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1e293b;
+            text-transform: uppercase;
+            border-bottom: 2px solid #1e293b;
+            padding-bottom: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .item {
+            margin-bottom: 20px;
+        }
+
+        .item-header {
+            font-weight: bold;
+            font-size: 14px;
+            color: #0f172a;
+        }
+
+        .item-sub {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .description {
+            font-size: 12px;
+            color: #334155;
+            text-align: justify;
+        }
+    </style>
+</head>
+
+<body>
+    <table class="layout-table">
+        <tr>
+            <!-- Sidebar Column -->
+            <td class="sidebar">
+                <div class="name">{{ resume.full_name }}</div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Contact</div>
+                    <div class="sidebar-text">{{ resume.email }}</div>
+                    <div class="sidebar-text">{{ resume.phone }}</div>
+                    <div class="sidebar-text">{{ resume.address }}</div>
+                    {% if resume.linkedin_url %}<div class="sidebar-text">{{ resume.linkedin_url }}</div>{% endif %}
+                    {% if resume.website_url %}<div class="sidebar-text">{{ resume.website_url }}</div>{% endif %}
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="sidebar-title">Skills</div>
+                    <div class="sidebar-text">{{ resume.skills|linebreaksbr }}</div>
+                </div>
+            </td>
+
+            <!-- Main Content Column -->
+            <td class="main">
+                {% if resume.summary %}
+                <div class="section">
+                    <div class="main-title">Profile</div>
+                    <div class="description">{{ resume.summary }}</div>
+                </div>
+                {% endif %}
+
+                <div class="section">
+                    <div class="main-title">Experience</div>
+                    {% for exp in resume.experience.all %}
+                    <div class="item">
+                        <div class="item-header">{{ exp.job_title }}</div>
+                        <div class="item-sub">
+                            {{ exp.company }} | {{ exp.start_date }} - {% if exp.is_current %}Present{% else %}
+                            {{exp.end_date }}{% endif %}
+                        </div>
+                        <div class="description">{{ exp.description|linebreaksbr }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="section">
+                    <div class="main-title">Education</div>
+                    {% for edu in resume.education.all %}
+                    <div class="item">
+                        <div class="item-header">{{ edu.degree }}</div>
+                        <div class="item-sub">{{ edu.institution }} | {{ edu.start_date }} - {% if edu.end_date %}{{
+                            edu.end_date }}{% else %}Present{% endif %}</div>
+                        <div class="description">{{ edu.description|linebreaksbr }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>

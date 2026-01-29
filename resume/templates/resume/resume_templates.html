@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Resume Templates - Resume Builder{% endblock %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 3rem;">
+    <h1 style="font-size: 2.5rem; margin-bottom: 1rem; color: #0f172a;">Choose Your Template</h1>
+    <p style="font-size: 1.1rem; color: #64748b;">Select a professional design to get started.</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+    <!-- Template Card 1 -->
+    <div
+        style="background: white; border-radius: 0.5rem; overflow: hidden; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid #e2e8f0;">
+        <div
+            style="height: 400px; background: #f1f5f9; display: flex; justify-content: center; padding: 20px; box-sizing: border-box; overflow: hidden;">
+            <div
+                style="width: 100%; height: 100%; background: white; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); padding: 15px; display: flex; flex-direction: column; box-sizing: border-box;">
+                <!-- Mini Resume Preview -->
+                <div style="width: 100%; height: 30px; background: #e2e8f0; margin-bottom: 10px;"></div>
+                <div style="width: 60%; height: 10px; background: #e2e8f0; margin-bottom: 20px;"></div>
+                <div style="width: 100%; height: 5px; background: #f1f5f9; margin-bottom: 5px;"></div>
+                <div style="width: 100%; height: 5px; background: #f1f5f9; margin-bottom: 5px;"></div>
+                <div style="width: 80%; height: 5px; background: #f1f5f9; margin-bottom: 15px;"></div>
+                <div style="width: 100%; height: 5px; background: #f1f5f9; margin-bottom: 5px;"></div>
+                <div style="width: 100%; height: 5px; background: #f1f5f9; margin-bottom: 5px;"></div>
+                <div style="width: 90%; height: 5px; background: #f1f5f9; margin-bottom: 5px;"></div>
+            </div>
+        </div>
+        <div style="padding: 1.5rem;">
+            <h3 style="font-size: 1.25rem; margin: 0 0 0.5rem 0; color: #0f172a;">Modern Professional</h3>
+            <p style="color: #64748b; margin-bottom: 1.5rem;">Clean and contemporary design suitable for most
+                industries.</p>
+            {% if resume_id %}
+            <a href="{% url 'generate_pdf' resume_id 'modern' %}" class="btn"
+                style="width: 100%; text-align: center; box-sizing: border-box;">Select &
+                Download</a>
+            {% else %}
+            <a href="{% url 'create_resume' %}" class="btn"
+                style="width: 100%; text-align: center; box-sizing: border-box;">Create Resume to Use</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Template Card 2 -->
+    <div
+        style="background: white; border-radius: 0.5rem; overflow: hidden; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid #e2e8f0;">
+        <div
+            style="height: 400px; background: #f1f5f9; display: flex; justify-content: center; padding: 20px; box-sizing: border-box; overflow: hidden;">
+            <div
+                style="width: 100%; height: 100%; background: white; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); display: flex; box-sizing: border-box;">
+                <div style="width: 30%; background: #1e293b; height: 100%;"></div>
+                <div style="width: 70%; padding: 15px; box-sizing: border-box;">
+                    <div style="width: 80%; height: 20px; background: #e2e8f0; margin-bottom: 15px;"></div>
+                    <div style="width: 100%; height: 5px; background: #f1f5f9; margin-bottom: 5px;"></div>
+                    <div style="width: 100%; height: 5px; background: #f1f5f9; margin-bottom: 5px;"></div>
+                    <div style="width: 90%; height: 5px; background: #f1f5f9; margin-bottom: 5px;"></div>
+                </div>
+            </div>
+        </div>
+        <div style="padding: 1.5rem;">
+            <h3 style="font-size: 1.25rem; margin: 0 0 0.5rem 0; color: #0f172a;">Creative Minimalist</h3>
+            <p style="color: #64748b; margin-bottom: 1.5rem;">Stand out with a unique layout and bold typography.</p>
+            {% if resume_id %}
+            <a href="{% url 'generate_pdf' resume_id 'creative' %}" class="btn"
+                style="width: 100%; text-align: center; box-sizing: border-box;">Select &
+                Download</a>
+            {% else %}
+            <a href="{% url 'create_resume' %}" class="btn"
+                style="width: 100%; text-align: center; box-sizing: border-box;">Create Resume to Use</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Template Card 3 -->
+    <div
+        style="background: white; border-radius: 0.5rem; overflow: hidden; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid #e2e8f0;">
+        <div
+            style="height: 400px; background: #f1f5f9; display: flex; justify-content: center; padding: 20px; box-sizing: border-box; overflow: hidden;">
+            <div
+                style="width: 100%; height: 100%; background: white; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); padding: 15px; text-align: center; box-sizing: border-box;">
+                <div style="width: 50%; height: 25px; background: #e2e8f0; margin: 0 auto 10px;"></div>
+                <div style="width: 30%; height: 5px; background: #cbd5e1; margin: 0 auto 20px;"></div>
+                <div style="width: 100%; height: 1px; background: #000; margin-bottom: 15px;"></div>
+                <div style="text-align: left;">
+                    <div style="width: 40%; height: 10px; background: #e2e8f0; margin-bottom: 5px;"></div>
+                    <div style="width: 100%; height: 5px; background: #f1f5f9; margin-bottom: 5px;"></div>
+                    <div style="width: 100%; height: 5px; background: #f1f5f9; margin-bottom: 5px;"></div>
+                </div>
+            </div>
+        </div>
+        <div style="padding: 1.5rem;">
+            <h3 style="font-size: 1.25rem; margin: 0 0 0.5rem 0; color: #0f172a;">Executive Suite</h3>
+            <p style="color: #64748b; margin-bottom: 1.5rem;">Traditional and authoritative style for senior roles.</p>
+            {% if resume_id %}
+            <a href="{% url 'generate_pdf' resume_id 'executive' %}" class="btn"
+                style="width: 100%; text-align: center; box-sizing: border-box;">Select &
+                Download</a>
+            {% else %}
+            <a href="{% url 'create_resume' %}" class="btn"
+                style="width: 100%; text-align: center; box-sizing: border-box;">Create Resume to Use</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

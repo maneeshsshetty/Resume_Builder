@@ -1,0 +1,771 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Your Resume - Resume Builder{% endblock %}
+
+{% block content %}
+<div class="resume-container">
+    <div class="form-header">
+        <h1>Build Your Resume</h1>
+        <p>Complete the steps below to create your professional resume.</p>
+    </div>
+
+    <!-- Progress Steps -->
+    <div class="progress-container">
+        <div class="progress-track"></div>
+        <div class="step-indicator active" data-step="0">
+            <div class="step-circle">1</div>
+            <span class="step-label">Personal</span>
+        </div>
+        <div class="step-indicator" data-step="1">
+            <div class="step-circle">2</div>
+            <span class="step-label">Summary</span>
+        </div>
+        <div class="step-indicator" data-step="2">
+            <div class="step-circle">3</div>
+            <span class="step-label">Education</span>
+        </div>
+        <div class="step-indicator" data-step="3">
+            <div class="step-circle">4</div>
+            <span class="step-label">Experience</span>
+        </div>
+        <div class="step-indicator" data-step="4">
+            <div class="step-circle">5</div>
+            <span class="step-label">Skills</span>
+        </div>
+    </div>
+
+    <form method="post" id="resumeForm">
+        {% csrf_token %}
+
+        <!-- Error Banner (Global) -->
+        {% if form.errors or education_formset.errors or experience_formset.errors %}
+        <div class="error-banner">
+            <h3>Please check the form for errors</h3>
+            {% if form.non_field_errors %}
+            <ul>
+                {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- STEP 1: Personal Information -->
+        <div class="form-step active-step" id="step-0">
+            <section class="form-section">
+                <h2 class="section-title">
+                    <span class="icon">👤</span> Personal Information
+                </h2>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="{{ form.full_name.id_for_label }}">Full Name</label>
+                        {{ form.full_name }}
+                        {{ form.full_name.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.email.id_for_label }}">Email</label>
+                        {{ form.email }}
+                        {{ form.email.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.phone.id_for_label }}">Phone</label>
+                        {{ form.phone }}
+                        {{ form.phone.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.address.id_for_label }}">Address</label>
+                        {{ form.address }}
+                        {{ form.address.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.linkedin_url.id_for_label }}">LinkedIn URL</label>
+                        {{ form.linkedin_url }}
+                        {{ form.linkedin_url.errors }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.website_url.id_for_label }}">Website / Portfolio (Optional)</label>
+                        {{ form.website_url }}
+                        {{ form.website_url.errors }}
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- STEP 2: Professional Summary -->
+        <div class="form-step" id="step-1">
+            <section class="form-section">
+                <h2 class="section-title">
+                    <span class="icon">📄</span> Professional Summary
+                </h2>
+                <div class="form-group">
+                    <label for="{{ form.summary.id_for_label }}">Summary</label>
+                    {{ form.summary }}
+                    <p class="help-text">Write 2-4 sentences summarizing your experience and goals.</p>
+                    {{ form.summary.errors }}
+                </div>
+            </section>
+        </div>
+
+        <!-- STEP 3: Education -->
+        <div class="form-step" id="step-2">
+            <section class="form-section">
+                <h2 class="section-title">
+                    <span class="icon">🎓</span> Education
+                </h2>
+                {{ education_formset.management_form }}
+                <div id="education-forms" class="formset-container">
+                    {% for form in education_formset %}
+                    <div class="formset-item education-item">
+                        <div class="formset-header">
+                            <h3>Education #{{ forloop.counter }}</h3>
+                            {% if education_formset.can_delete %}
+                            <div class="delete-checkbox">{{ form.DELETE }} Delete</div>
+                            {% endif %}
+                        </div>
+                        {{ form.id }}
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Institution</label>
+                                {{ form.institution }}
+                                {{ form.institution.errors }}
+                            </div>
+                            <div class="form-group">
+                                <label>Degree</label>
+                                {{ form.degree }}
+                                {{ form.degree.errors }}
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Field of Study</label>
+                                {{ form.field_of_study }}
+                                {{ form.field_of_study.errors }}
+                            </div>
+                            <div class="form-group">
+                                <label>Start Date</label>
+                                {{ form.start_date }}
+                                {{ form.start_date.errors }}
+                            </div>
+                            <div class="form-group">
+                                <label>End Date</label>
+                                {{ form.end_date }}
+                                {{ form.end_date.errors }}
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Description (Optional)</label>
+                                {{ form.description }}
+                                {{ form.description.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="button" id="add-education" class="btn btn-secondary">+ Add Education</button>
+            </section>
+        </div>
+
+        <!-- STEP 4: Experience -->
+        <div class="form-step" id="step-3">
+            <section class="form-section">
+                <h2 class="section-title">
+                    <span class="icon">💼</span> Experience
+                </h2>
+                {{ experience_formset.management_form }}
+                <div id="experience-forms" class="formset-container">
+                    {% for form in experience_formset %}
+                    <div class="formset-item experience-item">
+                        <div class="formset-header">
+                            <h3>Experience #{{ forloop.counter }}</h3>
+                            {% if experience_formset.can_delete %}
+                            <div class="delete-checkbox">{{ form.DELETE }} Delete</div>
+                            {% endif %}
+                        </div>
+                        {{ form.id }}
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label>Job Title</label>
+                                {{ form.job_title }}
+                                {{ form.job_title.errors }}
+                            </div>
+                            <div class="form-group">
+                                <label>Company</label>
+                                {{ form.company }}
+                                {{ form.company.errors }}
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Location</label>
+                                {{ form.location }}
+                                {{ form.location.errors }}
+                            </div>
+                            <div class="form-group">
+                                <label>Start Date</label>
+                                {{ form.start_date }}
+                                {{ form.start_date.errors }}
+                            </div>
+                            <div class="form-group">
+                                <label>End Date</label>
+                                {{ form.end_date }}
+                                {{ form.end_date.errors }}
+                            </div>
+                            <div class="form-group checkbox-group full-width">
+                                <label>
+                                    {{ form.is_current }} I currently work here
+                                </label>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Description</label>
+                                {{ form.description }}
+                                <p class="help-text">Describe your responsibilities and achievements.</p>
+                                {{ form.description.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="button" id="add-experience" class="btn btn-secondary">+ Add Experience</button>
+            </section>
+        </div>
+
+        <!-- STEP 5: Skills -->
+        <div class="form-step" id="step-4">
+            <section class="form-section">
+                <h2 class="section-title">
+                    <span class="icon">⚡</span> Skills
+                </h2>
+                <div class="form-group">
+                    <label for="{{ form.skills.id_for_label }}">Skills List</label>
+                    {{ form.skills }}
+                    <p class="help-text">Separate skills with commas (e.g. Python, Leadership, Project Management)</p>
+                    {{ form.skills.errors }}
+                </div>
+            </section>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="wizard-actions">
+            <button type="button" id="prevBtn" class="btn btn-secondary" disabled>Back</button>
+            <button type="button" id="nextBtn" class="btn btn-primary">Next</button>
+            <button type="submit" id="submitBtn" class="btn btn-success" style="display: none;">Save & Create
+                Resume</button>
+        </div>
+    </form>
+</div>
+
+<!-- Hidden Empty Forms for JS Cloning (Same as before) -->
+<div id="empty-education-form" style="display:none;">
+    <div class="formset-item education-item">
+        <div class="formset-header">
+            <h3>New Education</h3>
+            <button type="button" class="btn-remove">Remove</button>
+        </div>
+        <div class="grid-2">
+            <div class="form-group">
+                <label>Institution</label>
+                {{ education_formset.empty_form.institution }}
+            </div>
+            <div class="form-group">
+                <label>Degree</label>
+                {{ education_formset.empty_form.degree }}
+            </div>
+            <div class="form-group full-width">
+                <label>Field of Study</label>
+                {{ education_formset.empty_form.field_of_study }}
+            </div>
+            <div class="form-group">
+                <label>Start Date</label>
+                {{ education_formset.empty_form.start_date }}
+            </div>
+            <div class="form-group">
+                <label>End Date</label>
+                {{ education_formset.empty_form.end_date }}
+            </div>
+            <div class="form-group full-width">
+                <label>Description (Optional)</label>
+                {{ education_formset.empty_form.description }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="empty-experience-form" style="display:none;">
+    <div class="formset-item experience-item">
+        <div class="formset-header">
+            <h3>New Experience</h3>
+            <button type="button" class="btn-remove">Remove</button>
+        </div>
+        <div class="grid-2">
+            <div class="form-group">
+                <label>Job Title</label>
+                {{ experience_formset.empty_form.job_title }}
+            </div>
+            <div class="form-group">
+                <label>Company</label>
+                {{ experience_formset.empty_form.company }}
+            </div>
+            <div class="form-group full-width">
+                <label>Location</label>
+                {{ experience_formset.empty_form.location }}
+            </div>
+            <div class="form-group">
+                <label>Start Date</label>
+                {{ experience_formset.empty_form.start_date }}
+            </div>
+            <div class="form-group">
+                <label>End Date</label>
+                {{ experience_formset.empty_form.end_date }}
+            </div>
+            <div class="form-group checkbox-group full-width">
+                <label>
+                    {{ experience_formset.empty_form.is_current }} I currently work here
+                </label>
+            </div>
+            <div class="form-group full-width">
+                <label>Description</label>
+                {{ experience_formset.empty_form.description }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Scope styles to resume container */
+    .resume-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding-bottom: 4rem;
+    }
+
+    .form-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    /* Progress Bar */
+    .progress-container {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        margin-bottom: 2.5rem;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .progress-track {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 4px;
+        background: #e2e8f0;
+        width: 100%;
+        z-index: 1;
+        transition: background 0.3s;
+    }
+
+    .step-indicator {
+        position: relative;
+        z-index: 2;
+        background: var(--bg);
+        /* Match body bg */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 30px;
+        /* Width wrapper */
+    }
+
+    .step-circle {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: #e2e8f0;
+        color: #64748b;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 600;
+        border: 2px solid #e2e8f0;
+        transition: all 0.3s;
+    }
+
+    .step-label {
+        position: absolute;
+        top: 40px;
+        font-size: 0.8rem;
+        color: #64748b;
+        white-space: nowrap;
+        font-weight: 500;
+    }
+
+    .step-indicator.active .step-circle {
+        background: black;
+        color: white;
+        border-color: black;
+    }
+
+    .step-indicator.active .step-label {
+        color: black;
+        font-weight: 700;
+    }
+
+    .step-indicator.completed .step-circle {
+        background: #333;
+        /* Dark Gray */
+        color: white;
+        border-color: #333;
+    }
+
+    /* Steps visibility */
+    .form-step {
+        display: none;
+        animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .form-step.active-step {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Actions */
+    .wizard-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .btn-success {
+        background: black;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .btn-success:hover {
+        background: #333;
+    }
+
+    .btn-primary {
+        background: black;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background 0.2s;
+    }
+
+    .btn:disabled {
+        background: #cbd5e1;
+        cursor: not-allowed;
+        border-color: #cbd5e1;
+        color: #94a3b8;
+    }
+
+    /* Existing Styles */
+    .form-header h1 {
+        font-size: 2.5rem;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+    }
+
+    .form-header p {
+        color: var(--secondary);
+        font-size: 1.1rem;
+    }
+
+    .form-section {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        border: 1px solid #e2e8f0;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f1f5f9;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: #334155;
+    }
+
+    .section-title .icon {
+        font-size: 1.5rem;
+    }
+
+    .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    label {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #475569;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-input,
+    .form-textarea,
+    select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        box-sizing: border-box;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus,
+    select:focus {
+        outline: none;
+        border-color: black;
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .help-text {
+        font-size: 0.85rem;
+        color: #94a3b8;
+        margin-top: 0.25rem;
+    }
+
+    .formset-item {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .formset-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .formset-header h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        color: #334155;
+    }
+
+    .btn-secondary {
+        background: white;
+        border: 2px solid black;
+        color: black;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+        background: #eff6ff;
+    }
+
+    .btn-remove {
+        background: #fee2e2;
+        color: #ef4444;
+        border: none;
+        padding: 0.25rem 0.75rem;
+        border-radius: 0.25rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn-remove:hover {
+        background: #fecaca;
+    }
+
+    .error-banner {
+        background: #fef2f2;
+        border: 1px solid #fee2e2;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 2rem;
+        color: #b91c1c;
+    }
+
+    .errorlist {
+        color: #ef4444;
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+        list-style: none;
+        padding: 0;
+    }
+
+    @media (max-width: 640px) {
+        .grid-2 {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        let currentStep = 0;
+        const totalSteps = 5;
+        const steps = document.querySelectorAll('.form-step');
+        const indicators = document.querySelectorAll('.step-indicator');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+
+        function showStep(n) {
+            steps.forEach((step, index) => {
+                step.classList.remove('active-step');
+                if (index === n) {
+                    step.classList.add('active-step');
+                }
+            });
+
+            // Update Buttons
+            if (n === 0) {
+                prevBtn.disabled = true;
+            } else {
+                prevBtn.disabled = false;
+            }
+
+            if (n === totalSteps - 1) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'inline-block';
+            } else {
+                nextBtn.style.display = 'inline-block';
+                submitBtn.style.display = 'none';
+            }
+
+            // Update Indicators
+            indicators.forEach((ind, index) => {
+                ind.classList.remove('active', 'completed');
+                if (index === n) {
+                    ind.classList.add('active');
+                } else if (index < n) {
+                    ind.classList.add('completed');
+                }
+            });
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < totalSteps - 1) {
+                // Here you can add validation if needed
+                if (!validateCurrentStep()) {
+                    alert("Please fill in required fields.");
+                    return;
+                }
+                currentStep++;
+                showStep(currentStep);
+            }
+        });
+
+        function validateCurrentStep() {
+            // Simple validation: check required fields in current step
+            const currentStepEl = steps[currentStep];
+            const requiredInputs = currentStepEl.querySelectorAll('input[required], select[required], textarea[required]');
+            let valid = true;
+            requiredInputs.forEach(input => {
+                if (!input.value.trim()) {
+                    input.style.borderColor = 'red';
+                    valid = false;
+                } else {
+                    input.style.borderColor = '#cbd5e1';
+                }
+            });
+            return valid;
+        }
+
+        // --- Dynamic Formset Logic (Preserved) ---
+        function addForm(formType) {
+            const formContainer = document.getElementById(formType + '-forms');
+            const totalFormsInput = document.getElementById('id_' + formType + '-TOTAL_FORMS');
+            const emptyForm = document.getElementById('empty-' + formType.replace('_set', '') + '-form').firstElementChild.cloneNode(true);
+
+            const currentFormCount = parseInt(totalFormsInput.value);
+            const newFormHtml = emptyForm.innerHTML.replace(/__prefix__/g, currentFormCount);
+            emptyForm.innerHTML = newFormHtml;
+
+            const title = emptyForm.querySelector('h3');
+            if (title) {
+                title.textContent = title.textContent.replace('New', '') + ' #' + (currentFormCount + 1);
+            }
+
+            const removeBtn = emptyForm.querySelector('.btn-remove');
+            if (removeBtn) {
+                removeBtn.addEventListener('click', function () {
+                    emptyForm.remove();
+                });
+            }
+
+            formContainer.appendChild(emptyForm);
+            totalFormsInput.value = currentFormCount + 1;
+        }
+
+        const addEduBtn = document.getElementById('add-education');
+        if (addEduBtn) {
+            addEduBtn.addEventListener('click', () => addForm('education'));
+        }
+
+        const addExpBtn = document.getElementById('add-experience');
+        if (addExpBtn) {
+            addExpBtn.addEventListener('click', () => addForm('experience'));
+        }
+
+        // Initial setup
+        showStep(currentStep);
+    });
+</script>
+{% endblock %}
