@@ -21,7 +21,7 @@ A powerful and easy-to-use web application built with Django that helps users cr
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/maneeshsshetty/Resume_Builder.git
    cd resume_builder
    ```
 
