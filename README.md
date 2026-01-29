@@ -63,9 +63,6 @@ A powerful and easy-to-use web application built with Django that helps users cr
 5. Select a template design from the options provided.
 6. Your resume will be generated and downloaded as a PDF!
 
-## 📄 License
-
-This project is licensed under the MIT License.
 
 ## 👤 Author
 
