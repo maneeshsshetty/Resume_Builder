@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
-from .models import Resume, Education, Experience
+from .models import Resume, Education, Experience, Project
 
 class ResumeForm(forms.ModelForm):
     use_required_attribute = False
@@ -47,5 +47,19 @@ class ExperienceForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-textarea', 'rows': 3}),
         }
 
+class ProjectForm(forms.ModelForm):
+    use_required_attribute = False
+    class Meta:
+        model = Project
+        fields = ['title', 'role', 'start_date', 'end_date', 'description']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Project Title'}),
+            'role': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Role in Project'}),
+            'start_date': forms.DateInput(attrs={'class': 'form-input', 'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'class': 'form-input', 'type': 'date'}),
+            'description': forms.Textarea(attrs={'class': 'form-textarea', 'rows': 3}),
+        }
+
 EducationFormSet = inlineformset_factory(Resume, Education, form=EducationForm, extra=1, can_delete=False)
 ExperienceFormSet = inlineformset_factory(Resume, Experience, form=ExperienceForm, extra=1, can_delete=False)
+ProjectFormSet = inlineformset_factory(Resume, Project, form=ProjectForm, extra=1, can_delete=False)

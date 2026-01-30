@@ -136,6 +136,26 @@
     </div>
 
     <div class="section">
+        <div class="section-title">Projects</div>
+        {% for proj in resume.projects.all %}
+        <div class="item">
+            <table class="item-table">
+                <tr>
+                    <td>
+                        <div class="job-title">{{ proj.title }}</div>
+                        <div class="company">{% if proj.role %}{{ proj.role }}{% endif %}</div>
+                    </td>
+                    <td class="date">
+                        {{ proj.start_date }} – {% if proj.end_date %}{{ proj.end_date }}{% else %}Present{% endif %}
+                    </td>
+                </tr>
+            </table>
+            <div class="description">{{ proj.description|linebreaksbr }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="section">
         <div class="section-title">Education</div>
         {% for edu in resume.education.all %}
         <div class="item">

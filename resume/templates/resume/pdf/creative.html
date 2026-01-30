@@ -24,7 +24,7 @@
         }
 
         .sidebar {
-            width: 30%;
+            width: 39%;
             background-color: #1e293b;
             color: white;
             padding: 30px 20px;
@@ -32,7 +32,7 @@
         }
 
         .main {
-            width: 70%;
+            width: 65%;
             padding: 30px;
             vertical-align: top;
             background-color: #ffffff;
@@ -150,6 +150,20 @@
                             {{exp.end_date }}{% endif %}
                         </div>
                         <div class="description">{{ exp.description|linebreaksbr }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="section">
+                    <div class="main-title">Projects</div>
+                    {% for proj in resume.projects.all %}
+                    <div class="item">
+                        <div class="item-header">{{ proj.title }}</div>
+                        <div class="item-sub">
+                            {% if proj.role %}{{ proj.role }} | {% endif %}{{ proj.start_date }} -
+                            {% if proj.end_date %}{{ proj.end_date }}{% else %}Present{% endif %}
+                        </div>
+                        <div class="description">{{ proj.description|linebreaksbr }}</div>
                     </div>
                     {% endfor %}
                 </div>
