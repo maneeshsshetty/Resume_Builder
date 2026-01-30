@@ -69,4 +69,4 @@ A powerful and easy-to-use web application built with Django that helps users cr
 **Maneesh Shetty**
 - [GitHub](https://github.com/maneeshsshetty)
 - [LinkedIn](https://www.linkedin.com/in/maneeshsshetty/)
-- [Gmail](mailto:maneeshsshettyy@gmail.com)
+- [Gmail](maneeshsshettyy@gmail.com)
