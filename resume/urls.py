@@ -7,5 +7,7 @@ urlpatterns = [
     path('templates/<int:resume_id>/', views.resume_templates, name='resume_templates'),
     path('create/', views.create_resume, name='create_resume'),
     path('resume/<int:resume_id>/download/<str:template_name>/', views.generate_pdf, name='generate_pdf'),
+    path('resume/<int:resume_id>/view/', views.view_resume, name='view_resume'),
+    path('search/', views.employee_search, name='employee_search'),
     path('about/', views.about, name='about'),
 ]

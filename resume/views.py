@@ -73,3 +73,19 @@ def resume_templates(request, resume_id=None):
 
 def about(request):
     return render(request, 'resume/about.html')
+
+def employee_search(request):
+    query = request.GET.get('query')
+    results = []
+    if query:
+        if query.isdigit():
+            results = Resume.objects.filter(id=query)
+        else:
+            results = Resume.objects.filter(full_name__icontains=query)
+    
+    return render(request, 'resume/employee_search.html', {'results': results, 'query': query})
+
+def view_resume(request, resume_id, template_name='sample'):
+    resume = get_object_or_404(Resume, pk=resume_id)
+    template_path = f'resume/pdf/{template_name}.html'
+    return render(request, template_path, {'resume': resume})

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        @page {
+            size: A4;
+            margin: 1.5cm;
+        }
+
+        body {
+            font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+            color: #333;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #009688;
+            /* Teal underline */
+            padding-bottom: 20px;
+        }
+
+        .name {
+            font-size: 32px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #00796b;
+            /* Darker teal for Name */
+            letter-spacing: 2px;
+        }
+
+        .contact-info {
+            font-size: 12px;
+            color: #555;
+            margin-top: 10px;
+        }
+
+        .section {
+            margin-top: 25px;
+            margin-bottom: 20px;
+        }
+
+        .section-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: #00796b;
+            text-transform: uppercase;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .item {
+            margin-bottom: 15px;
+        }
+
+        .item-title-row {
+            width: 100%;
+            margin-bottom: 2px;
+        }
+
+        /* Using a table for the title/date split is safest in xhtml2pdf */
+        .title-table {
+            width: 100%;
+        }
+
+        .job-title {
+            font-weight: bold;
+            font-size: 15px;
+            color: #333;
+        }
+
+        .company-name {
+            font-weight: bold;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .date-location {
+            text-align: right;
+            font-size: 12px;
+            color: #888;
+            font-style: italic;
+        }
+
+        .description {
+            font-size: 13px;
+            color: #444;
+            text-align: justify;
+            margin-top: 5px;
+        }
+
+        .skills-list {
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <div class="name">{{ resume.full_name }}</div>
+        <div class="contact-info">
+            {{ resume.email }} | {{ resume.phone }}
+            {% if resume.linkedin_url %}| {{ resume.linkedin_url }} {% endif %}
+            {% if resume.website_url %}| {{ resume.website_url }} {% endif %}
+            <br>
+            {{ resume.address }}
+        </div>
+    </div>
+
+    {% if resume.summary %}
+    <div class="section">
+        <div class="section-header">Summary</div>
+        <div class="description">{{ resume.summary }}</div>
+    </div>
+    {% endif %}
+
+    <div class="section">
+        <div class="section-header">Experience</div>
+        {% for exp in resume.experience.all %}
+        <div class="item">
+            <table class="title-table">
+                <tr>
+                    <td style="width: 70%;">
+                        <span class="job-title">{{ exp.job_title }}</span>
+                    </td>
+                    <td class="date-location">
+                        {{ exp.start_date }} - {% if exp.is_current %}Present{% else %}{{ exp.end_date }}{% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <span class="company-name">{{ exp.company }}</span>
+                    </td>
+                </tr>
+            </table>
+            <div class="description">{{ exp.description|linebreaksbr }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="section">
+        <div class="section-header">Projects</div>
+        {% for proj in resume.projects.all %}
+        <div class="item">
+            <table class="title-table">
+                <tr>
+                    <td style="width: 70%;">
+                        <span class="job-title">{{ proj.title }}</span>
+                    </td>
+                    <td class="date-location">
+                        {{ proj.start_date }} - {% if proj.end_date %}{{ proj.end_date }}{% else %}Present{% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <span class="company-name">{% if proj.role %}{{ proj.role }}{% endif %}</span>
+                    </td>
+                </tr>
+            </table>
+            <div class="description">{{ proj.description|linebreaksbr }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="section">
+        <div class="section-header">Education</div>
+        {% for edu in resume.education.all %}
+        <div class="item">
+            <table class="title-table">
+                <tr>
+                    <td style="width: 70%;">
+                        <span class="job-title">{{ edu.institution }}</span>
+                    </td>
+                    <td class="date-location">
+                        {{ edu.start_date }} - {% if edu.end_date %}{{ edu.end_date }}{% else %}Present{% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <span class="company-name">{{ edu.degree }} {% if edu.field_of_study %} in {{ edu.field_of_study
+                            }}{% endif %}</span>
+                    </td>
+                </tr>
+            </table>
+            <div class="description">{{ edu.description|linebreaksbr }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="section">
+        <div class="section-header">Skills</div>
+        <div class="description skills-list">
+            {{ resume.skills|linebreaksbr }}
+        </div>
+    </div>
+
+</body>
+
+</html>

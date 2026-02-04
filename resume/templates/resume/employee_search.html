@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Employee Search - Resume Builder{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+    <h1 style="text-align: center; margin-bottom: 2rem; color: #1e293b;">Employee Search</h1>
+
+    <!-- Search Form -->
+    <form method="GET" action="{% url 'employee_search' %}" style="display: flex; gap: 10px; margin-bottom: 2rem;">
+        <input type="text" name="query" placeholder="Enter Employee Name or ID..." value="{{ query|default:'' }}"
+            style="flex: 1; padding: 10px; font-size: 16px; border: 1px solid #cbd5e1; border-radius: 6px;">
+        <button type="submit" class="btn" style="padding: 10px 20px; cursor: pointer;">Search</button>
+    </form>
+
+    <!-- Results -->
+    {% if query %}
+    {% if results %}
+    <h2 style="font-size: 1.25rem; margin-bottom: 1rem; color: #334155;">Search Results</h2>
+    <div style="background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead style="background: #f1f5f9;">
+                <tr>
+                    <th style="padding: 12px 16px; text-align: left; color: #475569; font-weight: 600;">ID</th>
+                    <th style="padding: 12px 16px; text-align: left; color: #475569; font-weight: 600;">Name</th>
+                    <th style="padding: 12px 16px; text-align: left; color: #475569; font-weight: 600;">Email</th>
+                    <th style="padding: 12px 16px; text-align: right; color: #475569; font-weight: 600;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for resume in results %}
+                <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 12px 16px; color: #64748b;">{{ resume.id }}</td>
+                    <td style="padding: 12px 16px; color: #1e293b; font-weight: 500;">{{ resume.full_name }}</td>
+                    <td style="padding: 12px 16px; color: #64748b;">{{ resume.email }}</td>
+                    <td style="padding: 12px 16px; text-align: right;">
+                        <a href="{% url 'view_resume' resume_id=resume.id %}" target="_blank" class="btn"
+                            style="font-size: 14px; padding: 6px 12px; background-color: #2563eb; border-color: #2563eb; margin-right: 5px;">
+                            View
+                        </a>
+                        <a href="{% url 'generate_pdf' resume_id=resume.id template_name='sample' %}" class="btn"
+                            style="font-size: 14px; padding: 6px 12px; background-color: #009688; border-color: #009688;">
+                            Download Resume
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="text-align: center; color: #64748b; padding: 2rem; background: #f8fafc; border-radius: 8px;">
+        No employees found matching "{{ query }}".
+    </div>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}
