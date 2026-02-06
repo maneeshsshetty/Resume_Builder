@@ -15,7 +15,7 @@ A powerful and easy-to-use web application built with Django that helps users cr
 - **Backend**: Python, Django
 - **Frontend**: HTML5, CSS3, JavaScript
 - **PDF Engine**: xhtml2pdf
-- **Database**: SQLite (Default)
+- **Database**: PostgreSQL (Production), SQLite (Fallback)
 
 ## 📦 Installation
 
@@ -50,6 +50,24 @@ A powerful and easy-to-use web application built with Django that helps users cr
    ```bash
    python manage.py runserver
    ```
+
+### 🔑 Environment Configuration
+
+Before running the application, create a `.env` file in the project root directory and add the following variables:
+
+```bash
+# Django Secret Key
+SECRET_KEY='your-secret-key-here'
+
+# Debug Mode (True for development, False for production)
+DEBUG=True
+
+# Allowed Hosts (comma-separated list, e.g., localhost,127.0.0.1)
+ALLOWED_HOSTS=*
+
+# Database URL (PostgreSQL)
+DATABASE_URL='postgresql://user:password@hostname:port/dbname'
+```
 
 6. **Access the application**
    Open your browser and navigate to `http://127.0.0.1:8000/`
