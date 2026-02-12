@@ -89,3 +89,39 @@ def view_resume(request, resume_id, template_name='sample'):
     resume = get_object_or_404(Resume, pk=resume_id)
     template_path = f'resume/pdf/{template_name}.html'
     return render(request, template_path, {'resume': resume})
+
+def employee_list(request):
+    resumes = Resume.objects.all()
+    return render(request, 'resume/employee_list.html', {'resumes': resumes})
+
+def update_resume(request, resume_id):
+    resume = get_object_or_404(Resume, pk=resume_id)
+    if request.method == 'POST':
+        form = ResumeForm(request.POST, instance=resume)
+        education_formset = EducationFormSet(request.POST, instance=resume)
+        experience_formset = ExperienceFormSet(request.POST, instance=resume)
+        project_formset = ProjectFormSet(request.POST, instance=resume)
+        if form.is_valid() and education_formset.is_valid() and experience_formset.is_valid() and project_formset.is_valid():
+            form.save()
+            education_formset.save()
+            experience_formset.save()
+            project_formset.save()
+            return redirect('employee_list')
+    else:
+        form = ResumeForm(instance=resume)
+        education_formset = EducationFormSet(instance=resume)
+        experience_formset = ExperienceFormSet(instance=resume)
+        project_formset = ProjectFormSet(instance=resume)
+        
+    return render(request, 'resume/create_resume.html', {
+        'form': form,
+        'education_formset': education_formset,
+        'experience_formset': experience_formset,
+        'project_formset': project_formset,
+        'title': 'Update Resume'
+    })
+
+def delete_resume(request, resume_id):
+    resume = get_object_or_404(Resume, pk=resume_id)
+    resume.delete()
+    return redirect('employee_list')
